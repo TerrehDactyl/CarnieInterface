@@ -203,17 +203,6 @@ gchar *pageheads[] = {"Prefilter","Preprocess", "Train", "Guess", "Evaluate","Ex
 const gchar *style[] = {"window_style", "label_style", "button_style", "help_style"};
 gdouble fraction;
 
-/*
-to do list
-
-pop out graph window after the training has completed 
-
-possibly add a graph for multiple file runs only. 
-
-possibly a button on the loading screen that generates the graph once it's done running or something 
-
-*/
-
 int main(int argc, char *argv [])
 {
 	gtk_init(&argc, &argv); //starting gtk 
@@ -232,17 +221,11 @@ int main(int argc, char *argv [])
 }
 
 void createnotebookpage(int i, gchar *buttonlabels[], void *buttoncallbacks[], size_t butt_size, gchar *chooserlabels[], void *choosercallbacks, 
-																									size_t chooserarr_size, gchar *labeltext[])
+													size_t chooserarr_size, gchar *labeltext[])
 {
-	gwidget.frame = gtk_frame_new (pageheads[i]);
-	GtkWidget *pagelabel = gtk_label_new(pageheads[i]);
-
-    gtk_container_set_border_width (GTK_CONTAINER (gwidget.frame), 10);
-    gtk_widget_set_size_request (gwidget.frame, 100, 75);
-
-    gtk_notebook_append_page (GTK_NOTEBOOK (gwidget.notebook), gwidget.frame, pagelabel);
-    gwidget.labelgrid = createlabels(labeltext, chooserarr_size);
-    gwidget.buttonbox = createsinglesizegrid(buttonlabels, buttoncallbacks, 1, butt_size);
+	gwidget.frame = create_frame_with_pagehead(gwidget.notebook, pageheads, i);
+        gwidget.labelgrid = createlabels(labeltext, chooserarr_size);
+        gwidget.buttonbox = createsinglesizegrid(buttonlabels, buttoncallbacks, 1, butt_size);
 	gwidget.choosers = createsinglesizegrid(chooserlabels, choosercallbacks, chooserarr_size,1);
 
 	switch(i)
@@ -421,7 +404,7 @@ void packboxes(int i)
 	}
 }
 
-void createfilechoosers(GtkWidget *widget, gpointer data) //maybe try passing a variable through this to fix the chooser shit 
+void createfilechoosers(GtkWidget *widget, gpointer data) 
 {
 	GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER;
 	gint res;
@@ -477,7 +460,7 @@ void read_from_output(GtkWidget *progress_box)
 	}
 }
 
-void create_progress_window(int i)//find a way to pop the graph out after the progress is done
+void create_progress_window(int i)
 {
 	GtkWindow *new_window = (GtkWindow *)gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gchar *training_labels[] = {"Steps Completed\n", "Examples per second\n", "Loss\n", "Time Remaining\n"};
